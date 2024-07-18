@@ -13,4 +13,4 @@ Configuration: Configured the gitlab-ci.yml file to orchestrate the build, test,
 
 Execution: Committed the code and initiated the pipeline on GitLab. 
 
-Repository Link: GitLab Repository 
+Repository Link: https://github.com/shobhit-22/abc-cicd
