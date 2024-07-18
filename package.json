@@ -1,0 +1,16 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node app.js",
+    "test": "cross-env NODE_ENV=test mocha --timeout 5000"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0"
+  },
+  "devDependencies": {
+    "mocha": "^8.3.2",
+    "cross-env": "^7.0.3"
+  }
+}

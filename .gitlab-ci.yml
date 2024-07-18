@@ -1,0 +1,70 @@
+image: node:14
+
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  DOCKER_IMAGE: registry.gitlab.com/gitlabcourse8454815/gitlabcicd
+
+cache:
+  paths:
+    - node_modules/
+
+before_script:
+  ##- echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+  - npm install
+
+build:
+  stage: build
+  tags:
+    - shared
+  script:
+    - echo "Building the node application..."
+  only:
+    - main
+    - merge_requests
+
+test:
+  stage: test
+  tags:
+    - shared
+  script:
+    - npm test
+    - echo "Testing the node application..."
+  artifacts:
+    paths:
+      - test-reports/
+  needs:
+    - build
+  only:
+    - main
+    - merge_requests
+
+docker_build:
+  stage: deploy
+  tags:
+    - shared
+  script:
+    - echo "Building the Docker image..."
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker build -t $DOCKER_IMAGE .
+    - echo "Pushing the Docker image..."
+    - docker push $DOCKER_IMAGE 
+  needs:
+    - test
+  only:
+    - main
+
+deploy:
+  stage: deploy
+  tags:
+    - shared
+  script:
+    - echo "Deploying node application..."
+    - docker run -d -p 3000:3000 $DOCKER_IMAGE
+  needs:
+    - docker_build
+  only:
+    - main
